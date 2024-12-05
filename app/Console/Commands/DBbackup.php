@@ -43,10 +43,10 @@ class DBbackup extends Command
         $host = env('DB_HOST');
         $filename = storage_path('app/backups/' . $database . '-' . now()->format('Y-m-d-H-i-s') . '.sql');
 
+        // Perform mysqldump
         $command = "mysqldump -u $username -p$password -h $host $database > $filename";
 
-        // $this->info("Executing command: $command");
-
+        // Execute the mysqldump command
         $output = null;
         $resultCode = null;
 
@@ -59,12 +59,18 @@ class DBbackup extends Command
             return;
         }
 
+        // Call the method to upload the backup to Google Drive
         $this->uploadToGoogleDrive($filename);
     }
 
     private function uploadToGoogleDrive($filePath)
     {
         $googleDriveService = new \App\Services\GoogleDriveService();
+        
+        // Authenticate before uploading
+        $googleDriveService->authenticate();
+
+        // Upload the file
         $googleDriveService->uploadFile($filePath);
     }
 }

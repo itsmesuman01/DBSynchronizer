@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleDriveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::group(['prefix' => 'google'], function(){
+    Route::any('/auth', [GoogleDriveController::class, 'redirectToGoogle']);
+    Route::any('/callback', [GoogleDriveController::class, 'handleGoogleCallback']);
 });
